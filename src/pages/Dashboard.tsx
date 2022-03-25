@@ -2,6 +2,7 @@ import { RadioBrowserApi } from "radio-browser-api";
 import { useEffect, useState } from "react";
 import { Card, Container, Button, Row, Col } from "react-bootstrap";
 import unknown from "../assets/images/unknown-radio.jpg";
+import ReactAudioPlayer from "react-audio-player";
 
 export const Dashboard = () => {
   const RadioBrowser = new RadioBrowserApi("My Radio App");
@@ -9,6 +10,8 @@ export const Dashboard = () => {
   const [stations, setStations] = useState<any | undefined>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
+
+  const [radio, setRadio] = useState("");
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,10 +34,14 @@ export const Dashboard = () => {
   return (
     <Container>
       <Row>
+        <Col>
+          <ReactAudioPlayer src={radio} autoPlay controls />
+        </Col>
+      </Row>
+      <Row>
         {isLoading
           ? "Loading..."
           : stations.map((station: any, index: any) => {
-              console.log(station.favicon);
               return (
                 <Col key={index}>
                   <Card style={{ width: "18rem" }}>
@@ -47,7 +54,13 @@ export const Dashboard = () => {
                       <Card.Text>
                         {station.country}, votes: {station.votes}
                       </Card.Text>
-                      <Button>Play</Button>
+                      <Button
+                        onClick={() => {
+                          setRadio(station.urlResolved);
+                        }}
+                      >
+                        Play
+                      </Button>
                     </Card.Body>
                   </Card>
                 </Col>

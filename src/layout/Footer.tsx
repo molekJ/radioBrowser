@@ -1,3 +1,3 @@
-export const Footer = () => {
+export default () => {
   return <div>Footer</div>;
 };

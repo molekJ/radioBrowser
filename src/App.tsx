@@ -1,13 +1,29 @@
-import { Container, Row, Col, CardGroup, Card, Button } from "react-bootstrap";
+/** Style */
+import "./assets/scss/main.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+
+/** Libs */
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+
+/** Layout */
+import Footer from "./layout/Footer";
+import Header from "./layout/Header";
+
+/** Pages */
 import { Dashboard } from "./pages/Dashboard";
 
 const App = () => {
   return (
-    <Container>
-      <Dashboard />
-    </Container>
+    <Router>
+      <Header />
+      <main>
+        <Routes>
+          <Route index element={<Dashboard />} />
+          {/* <Route path="myFavorite" element={<MyFavorite/>}/> */}
+        </Routes>
+      </main>
+      <Footer />
+    </Router>
   );
 };
 
