@@ -10,7 +10,7 @@ import Footer from "./layout/Footer";
 import Header from "./layout/Header";
 
 /** Pages */
-import { Dashboard } from "./pages/Dashboard";
+import { HomePage } from "./pages/HomePage";
 
 const App = () => {
   return (
@@ -18,7 +18,7 @@ const App = () => {
       <Header />
       <main>
         <Routes>
-          <Route index element={<Dashboard />} />
+          <Route index element={<HomePage />} />
           {/* <Route path="myFavorite" element={<MyFavorite/>}/> */}
         </Routes>
       </main>
