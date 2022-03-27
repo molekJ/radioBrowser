@@ -1,23 +1,23 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { Station } from "./Station";
-
+import { Station as StationInterface } from "../types/interfaces";
 interface StationSectionInterface {
+  stations: StationInterface[];
   title: string;
 }
 
-const arr = [1, 2, 3, 4, 5];
-export const StationSection = (props: StationSectionInterface) => {
+export const StationSection = (props: { props: StationSectionInterface }) => {
   return (
     <Container>
       <Row>
         <Col>
-          <h3>{props.title}</h3>
+          <h3>{props.props.title}</h3>
         </Col>
       </Row>
       <Row>
-        {arr.map((el) => (
-          <Col md={3}>
-            <Station></Station>;
+        {props.props.stations.map((station) => (
+          <Col sm={3}>
+            <Station props={station} />
           </Col>
         ))}
       </Row>
