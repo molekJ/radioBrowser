@@ -1,5 +1,3 @@
-export interface SomeInterface {}
-
 export interface Station {
   changeId: string;
   id: string;

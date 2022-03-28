@@ -1,7 +1,22 @@
-import { RadioBrowserApi } from "radio-browser-api";
+import { Station as StationInterface } from "../types/interfaces";
 
-const api = new RadioBrowserApi("myRadioApp");
+export default class RadioApi {
+  private _url =
+    "https://de1.api.radio-browser.info/json/stations/bycountry/poland";
 
-api.setBaseUrl("https://nl1.api.radio-browser.info");
-
-export default api;
+  /**
+   * getPolishStationw
+   */
+  public stations(): Promise<StationInterface[]> {
+    return new Promise((res, rej) => {
+      fetch(this._url, {})
+        .then((data) => {
+          data
+            .json()
+            .then((stations) => res(stations))
+            .catch((err) => rej(err));
+        })
+        .catch((err) => rej(err));
+    });
+  }
+}

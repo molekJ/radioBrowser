@@ -2,36 +2,44 @@ import { useEffect, useState } from "react";
 import { Card, Container, Button, Row, Col } from "react-bootstrap";
 import unknown from "../assets/images/unknown-radio.jpg";
 import ReactAudioPlayer from "react-audio-player";
-import radioApi from "../service/radio-api";
-import { StationSection } from "../components/StationSection";
-import { RadioBrowserApi } from "radio-browser-api";
+import { StationSection } from "../components/ListStationSection";
+import RadioApi from "../service/radio-api";
+import { Station as StationInterface } from "../types/interfaces";
+
+const api = new RadioApi();
 
 export const HomePage = () => {
-  const RadioBrowser = radioApi;
-
-  const [stations, setStations] = useState<any | undefined>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [stations, setStations] = useState<StationInterface[]>([]);
   const [error, setError] = useState();
 
   const [radio, setRadio] = useState("");
 
   useEffect(() => {
-    setIsLoading(true);
-    RadioBrowser.searchStations({
-      countryCode: "PL",
-      limit: 10,
-    })
-      .then((response) => {
-        setStations(response);
+    api
+      .stations()
+      .then((data) => {
+        setStations(data);
       })
-      .catch((error) => {
-        console.log("Error fetching data:", error);
-        setError(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
+
+  const filteredStation = (tag: string) => {
+    return stations.filter((station) => {
+      return station.tags.includes(tag) && station.favicon !== "";
+    });
+  };
+
+  const [rockStation, setRockStation] = useState<StationInterface[]>([]);
+  const [classicStation, setClassicStation] = useState<StationInterface[]>([]);
+  const [technoStation, setTechnoStation] = useState<StationInterface[]>([]);
+
+  useEffect(() => {
+    setRockStation(filteredStation("rock"));
+    setClassicStation(filteredStation("classic"));
+    setTechnoStation(filteredStation("techno"));
+  }, [stations]);
 
   return (
     <Container>
@@ -42,10 +50,20 @@ export const HomePage = () => {
       </Row>
 
       <Row>
-        {isLoading ? (
+        {stations.length === 0 ? (
           "Loading"
         ) : (
-          <StationSection props={{ stations, title: "PL" }}></StationSection>
+          <>
+            <StationSection
+              props={{ stations: rockStation, title: "ROCK" }}
+            ></StationSection>
+            <StationSection
+              props={{ stations: classicStation, title: "CLASSIS" }}
+            ></StationSection>
+            <StationSection
+              props={{ stations: technoStation, title: "TECHNO" }}
+            ></StationSection>
+          </>
         )}
       </Row>
     </Container>
