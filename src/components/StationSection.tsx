@@ -6,7 +6,10 @@ interface StationSectionInterface {
   title: string;
 }
 
-export const StationSection = (props: { props: StationSectionInterface }) => {
+export const StationSection = (props: {
+  props: StationSectionInterface;
+  handleStation: (url: string) => void;
+}) => {
   return (
     <Container>
       <Row>
@@ -16,11 +19,13 @@ export const StationSection = (props: { props: StationSectionInterface }) => {
       </Row>
       <Row>
         {props.props.stations.map((station) => (
-          <Col sm={3}>
-            <Station props={station} />
+          <Col key={station.url} sm={3}>
+            <Station props={station} handleStation={props.handleStation} />
           </Col>
         ))}
       </Row>
     </Container>
   );
 };
+
+// handleStation: (url: string) => void

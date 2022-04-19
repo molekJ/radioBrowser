@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, Container, Button, Row, Col } from "react-bootstrap";
 import unknown from "../assets/images/unknown-radio.jpg";
 import ReactAudioPlayer from "react-audio-player";
-import { StationSection } from "../components/ListStationSection";
+import { StationSection } from "../components/StationSection";
 import RadioApi from "../service/radio-api";
 import { Station as StationInterface } from "../types/interfaces";
 
@@ -13,6 +13,7 @@ export const HomePage = () => {
   const [error, setError] = useState();
 
   const [radio, setRadio] = useState("");
+  const [currentStation, setCurrentStation] = useState<string>("");
 
   useEffect(() => {
     api
@@ -41,11 +42,16 @@ export const HomePage = () => {
     setTechnoStation(filteredStation("techno"));
   }, [stations]);
 
+  const handleStation = (url: string) => {
+    setCurrentStation((old) => url);
+  };
+
   return (
     <Container>
       <Row>
         <Col>
-          <ReactAudioPlayer src={radio} autoPlay controls />
+          <p>Słuchasz: {currentStation}</p>
+          <ReactAudioPlayer src={currentStation} autoPlay controls />
         </Col>
       </Row>
 
@@ -56,12 +62,15 @@ export const HomePage = () => {
           <>
             <StationSection
               props={{ stations: rockStation, title: "ROCK" }}
+              handleStation={handleStation}
             ></StationSection>
             <StationSection
               props={{ stations: classicStation, title: "CLASSIS" }}
+              handleStation={handleStation}
             ></StationSection>
             <StationSection
               props={{ stations: technoStation, title: "TECHNO" }}
+              handleStation={handleStation}
             ></StationSection>
           </>
         )}
