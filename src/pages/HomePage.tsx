@@ -27,9 +27,22 @@ export const HomePage = () => {
   }, []);
 
   const filteredStation = (tag: string) => {
-    return stations.filter((station) => {
-      return station.tags.includes(tag) && station.favicon !== "";
-    });
+    return stations
+      .filter((station) => {
+        return station.tags.includes(tag) && station.favicon !== "";
+      })
+      .sort(compare)
+      .slice(0, 8);
+  };
+
+  const compare = (a: StationInterface, b: StationInterface) => {
+    if (a.votes < b.votes) {
+      return 1;
+    }
+    if (a.votes > b.votes) {
+      return -1;
+    }
+    return 0;
   };
 
   const [rockStation, setRockStation] = useState<StationInterface[]>([]);
@@ -39,7 +52,7 @@ export const HomePage = () => {
   useEffect(() => {
     setRockStation(filteredStation("rock"));
     setClassicStation(filteredStation("classic"));
-    setTechnoStation(filteredStation("techno"));
+    setTechnoStation(filteredStation("pop"));
   }, [stations]);
 
   const handleStation = (url: string) => {
@@ -50,7 +63,6 @@ export const HomePage = () => {
     <Container>
       <Row>
         <Col>
-          <p>Słuchasz: {currentStation}</p>
           <ReactAudioPlayer src={currentStation} autoPlay controls />
         </Col>
       </Row>
@@ -64,14 +76,14 @@ export const HomePage = () => {
               props={{ stations: rockStation, title: "ROCK" }}
               handleStation={handleStation}
             ></StationSection>
-            <StationSection
+            {/* <StationSection
               props={{ stations: classicStation, title: "CLASSIS" }}
               handleStation={handleStation}
             ></StationSection>
             <StationSection
-              props={{ stations: technoStation, title: "TECHNO" }}
+              props={{ stations: technoStation, title: "POP" }}
               handleStation={handleStation}
-            ></StationSection>
+            ></StationSection> */}
           </>
         )}
       </Row>

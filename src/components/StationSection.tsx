@@ -11,15 +11,15 @@ export const StationSection = (props: {
   handleStation: (url: string) => void;
 }) => {
   return (
-    <Container>
-      <Row>
+    <Container className="my-5">
+      <Row className="mb-2">
         <Col>
           <h3>{props.props.title}</h3>
         </Col>
       </Row>
       <Row>
         {props.props.stations.map((station) => (
-          <Col key={station.url} sm={3}>
+          <Col className="mb-3" key={station.url} sm={4}>
             <Station props={station} handleStation={props.handleStation} />
           </Col>
         ))}
@@ -27,5 +27,3 @@ export const StationSection = (props: {
     </Container>
   );
 };
-
-// handleStation: (url: string) => void
