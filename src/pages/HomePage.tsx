@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Container, Button, Row, Col } from "react-bootstrap";
 import unknown from "../assets/images/unknown-radio.jpg";
 import ReactAudioPlayer from "react-audio-player";
@@ -9,11 +9,25 @@ import { Station as StationInterface } from "../types/interfaces";
 const api = new RadioApi();
 
 export const HomePage = () => {
+  /** States */
+
   const [stations, setStations] = useState<StationInterface[]>([]);
   const [error, setError] = useState();
 
-  const [radio, setRadio] = useState("");
   const [currentStation, setCurrentStation] = useState<string>("");
+  const [rockStations, setRockStations] = useState<StationInterface[]>([]);
+  const [classicStations, setClassicStations] = useState<StationInterface[]>(
+    []
+  );
+  const [technoStations, setTechnoStations] = useState<StationInterface[]>([]);
+
+  /** Favorite */
+
+  const [favoriteStationsId, setFavoriteStationsId] = useState<string[]>(
+    getItemsFromLocaleStorage()
+  );
+
+  /** Effects */
 
   useEffect(() => {
     api
@@ -26,16 +40,31 @@ export const HomePage = () => {
       });
   }, []);
 
+  useEffect(() => {
+    setRockStations(filteredStation("rock"));
+    setClassicStations(filteredStation("classic"));
+    setTechnoStations(filteredStation("pop"));
+  }, [stations]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "favorite-stations",
+      JSON.stringify(favoriteStationsId)
+    );
+  }, [favoriteStationsId]);
+
+  /** Functions */
+
   const filteredStation = (tag: string) => {
     return stations
       .filter((station) => {
         return station.tags.includes(tag) && station.favicon !== "";
       })
-      .sort(compare)
+      .sort(compareStations)
       .slice(0, 8);
   };
 
-  const compare = (a: StationInterface, b: StationInterface) => {
+  const compareStations = (a: StationInterface, b: StationInterface) => {
     if (a.votes < b.votes) {
       return 1;
     }
@@ -45,45 +74,50 @@ export const HomePage = () => {
     return 0;
   };
 
-  const [rockStation, setRockStation] = useState<StationInterface[]>([]);
-  const [classicStation, setClassicStation] = useState<StationInterface[]>([]);
-  const [technoStation, setTechnoStation] = useState<StationInterface[]>([]);
-
-  useEffect(() => {
-    setRockStation(filteredStation("rock"));
-    setClassicStation(filteredStation("classic"));
-    setTechnoStation(filteredStation("pop"));
-  }, [stations]);
-
   const handleStation = (url: string) => {
     setCurrentStation((old) => url);
   };
 
+  //** LocaleStorage */
+
+  function getItemsFromLocaleStorage() {
+    return JSON.parse(localStorage.getItem("favorite-stations") || "[]");
+  }
+
+  // useEffect(() => {
+  //   console.log(favoriteStationsId);
+  // }, [favoriteStationsId]);
+
   return (
     <Container>
       <Row>
-        <Col>
+        <Col className="d-flex justify-content-center">
           <ReactAudioPlayer src={currentStation} autoPlay controls />
         </Col>
       </Row>
-
       <Row>
         {stations.length === 0 ? (
           "Loading"
         ) : (
           <>
             <StationSection
-              props={{ stations: rockStation, title: "ROCK" }}
+              props={{ stations: rockStations, title: "ROCK" }}
               handleStation={handleStation}
-            ></StationSection>
-            {/* <StationSection
-              props={{ stations: classicStation, title: "CLASSIS" }}
-              handleStation={handleStation}
+              favoriteStationsId={favoriteStationsId}
+              setFavoriteStationsId={setFavoriteStationsId}
             ></StationSection>
             <StationSection
-              props={{ stations: technoStation, title: "POP" }}
+              props={{ stations: classicStations, title: "CLASSIS" }}
               handleStation={handleStation}
-            ></StationSection> */}
+              favoriteStationsId={favoriteStationsId}
+              setFavoriteStationsId={setFavoriteStationsId}
+            ></StationSection>
+            <StationSection
+              props={{ stations: technoStations, title: "POP" }}
+              handleStation={handleStation}
+              favoriteStationsId={favoriteStationsId}
+              setFavoriteStationsId={setFavoriteStationsId}
+            ></StationSection>
           </>
         )}
       </Row>

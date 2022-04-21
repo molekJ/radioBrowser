@@ -5,7 +5,7 @@ export default class RadioApi {
     "https://de1.api.radio-browser.info/json/stations/bycountry/poland";
 
   /**
-   * getPolishStationw
+   * getPolishStation
    */
   public stations(): Promise<StationInterface[]> {
     return new Promise((res, rej) => {
