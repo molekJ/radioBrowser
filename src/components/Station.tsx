@@ -9,42 +9,42 @@ export const Station = (props: {
   favoriteStationsId: string[];
   setFavoriteStationsId: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
-  const [favorite, setFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleFavorite = () => {
-    setFavorite((old) => !old);
+    setIsFavorite((old) => !old);
     toggleFavoriteStation();
   };
 
-  const addToFavoriteStation = () => {
+  const addToFavoriteStations = () => {
     props.setFavoriteStationsId((favoriteStationsId) => [
       ...favoriteStationsId,
       props.props.url,
     ]);
   };
 
-  const removeFromFavoriteStation = () => {
+  const removeFromFavoriteStations = () => {
     props.setFavoriteStationsId((favoriteStationsId) =>
       favoriteStationsId.filter((old) => old != props.props.url)
     );
   };
 
   const toggleFavoriteStation = () => {
-    if (favorite) {
-      return removeFromFavoriteStation();
+    if (isFavorite) {
+      return removeFromFavoriteStations();
     }
-    return addToFavoriteStation();
+    return addToFavoriteStations();
   };
 
   const checkFavoriteInLocaleStorege = () => {
     if (props.favoriteStationsId.some((el) => el === props.props.url)) {
-      return setFavorite((favorite) => true);
-    }
+      return setIsFavorite((favorite) => true);
+    } else return setIsFavorite((favorite) => false);
   };
 
   useEffect(() => {
     checkFavoriteInLocaleStorege();
-  }, []);
+  }, [props.favoriteStationsId]);
 
   return (
     <Card className="station-component flex-row align-items-center px-1">
@@ -63,7 +63,7 @@ export const Station = (props: {
         </Col>
         <Col>
           <Button variant="link" onClick={handleFavorite}>
-            <i className={favorite ? "bi bi-heart-fill" : "bi bi-heart"}></i>
+            <i className={isFavorite ? "bi bi-heart-fill" : "bi bi-heart"}></i>
           </Button>
         </Col>
       </Card.Body>

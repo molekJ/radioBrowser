@@ -26,6 +26,9 @@ export const HomePage = () => {
   const [favoriteStationsId, setFavoriteStationsId] = useState<string[]>(
     getItemsFromLocaleStorage()
   );
+  const [favoriteStations, setFavoriteStations] = useState<StationInterface[]>(
+    []
+  );
 
   /** Effects */
 
@@ -53,6 +56,10 @@ export const HomePage = () => {
     );
   }, [favoriteStationsId]);
 
+  useEffect(() => {
+    setFavoriteStations(getFavoriteStations());
+  }, [favoriteStations]);
+
   /** Functions */
 
   const filteredStation = (tag: string) => {
@@ -78,18 +85,26 @@ export const HomePage = () => {
     setCurrentStation((old) => url);
   };
 
+  function getFavoriteStations() {
+    return stations.filter((station) => {
+      return favoriteStationsId.includes(station.url);
+    });
+  }
+
   //** LocaleStorage */
 
   function getItemsFromLocaleStorage() {
     return JSON.parse(localStorage.getItem("favorite-stations") || "[]");
   }
 
-  // useEffect(() => {
-  //   console.log(favoriteStationsId);
-  // }, [favoriteStationsId]);
-
   return (
     <Container>
+      {" "}
+      <Row>
+        <Col className="d-flex justify-content-center">
+          <p>Ulubione ID{favoriteStationsId}</p>
+        </Col>
+      </Row>
       <Row>
         <Col className="d-flex justify-content-center">
           <ReactAudioPlayer src={currentStation} autoPlay controls />
@@ -100,6 +115,12 @@ export const HomePage = () => {
           "Loading"
         ) : (
           <>
+            <StationSection
+              props={{ stations: favoriteStations, title: "FAVORITE" }}
+              handleStation={handleStation}
+              favoriteStationsId={favoriteStationsId}
+              setFavoriteStationsId={setFavoriteStationsId}
+            ></StationSection>
             <StationSection
               props={{ stations: rockStations, title: "ROCK" }}
               handleStation={handleStation}
