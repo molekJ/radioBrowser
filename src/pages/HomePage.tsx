@@ -102,11 +102,6 @@ export const HomePage = () => {
       {" "}
       <Row>
         <Col className="d-flex justify-content-center">
-          <p>Ulubione ID{favoriteStationsId}</p>
-        </Col>
-      </Row>
-      <Row>
-        <Col className="d-flex justify-content-center">
           <ReactAudioPlayer src={currentStation} autoPlay controls />
         </Col>
       </Row>
