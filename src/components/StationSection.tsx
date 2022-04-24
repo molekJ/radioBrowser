@@ -8,7 +8,7 @@ interface StationSectionInterface {
 
 export const StationSection = (props: {
   props: StationSectionInterface;
-  handleStation: (url: string) => void;
+  handlePlayedStation: (url: string) => void;
   favoriteStationsId: string[];
   setFavoriteStationsId: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
@@ -24,7 +24,7 @@ export const StationSection = (props: {
           <Col className="mb-3" key={station.url} sm={6} lg={4}>
             <Station
               props={station}
-              handleStation={props.handleStation}
+              handlePlayedStation={props.handlePlayedStation}
               favoriteStationsId={props.favoriteStationsId}
               setFavoriteStationsId={props.setFavoriteStationsId}
             />

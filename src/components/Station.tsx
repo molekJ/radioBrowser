@@ -5,15 +5,17 @@ import { Station as StationInterface } from "../types/interfaces";
 
 export const Station = (props: {
   props: StationInterface;
-  handleStation: (url: string) => void;
+  handlePlayedStation: (url: string) => void;
   favoriteStationsId: string[];
   setFavoriteStationsId: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const handleFavorite = () => {
-    setIsFavorite((old) => !old);
-    toggleFavoriteStation();
+  const toggleFavorite = () => {
+    if (isFavorite) {
+      return removeFromFavoriteStations();
+    }
+    return addToFavoriteStations();
   };
 
   const addToFavoriteStations = () => {
@@ -29,17 +31,15 @@ export const Station = (props: {
     );
   };
 
-  const toggleFavoriteStation = () => {
-    if (isFavorite) {
-      return removeFromFavoriteStations();
-    }
-    return addToFavoriteStations();
-  };
-
   const checkFavoriteInLocaleStorege = () => {
     if (props.favoriteStationsId.some((el) => el === props.props.url)) {
       return setIsFavorite((favorite) => true);
     } else return setIsFavorite((favorite) => false);
+  };
+
+  const handleFavorite = () => {
+    setIsFavorite((old) => !old);
+    toggleFavorite();
   };
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export const Station = (props: {
           <Button
             variant="link"
             onClick={() => {
-              props.handleStation(props.props.url);
+              props.handlePlayedStation(props.props.url);
             }}
           >
             <i className="bi bi-play-circle" style={{ fontSize: 30 }}></i>
